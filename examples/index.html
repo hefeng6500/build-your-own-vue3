@@ -10,9 +10,24 @@
 
 <body>
   <div id="app"></div>
-  <script src="../packages/vue/dist/vue.global.js"></script>
+  <script src="../packages/reactivity/dist/reactivity.global.js"></script>
   <script>
-    document.body.innerHTML = Vue();
+    console.log(VueReactivity);
+    const {
+      reactive,
+      shallowReactive,
+      readonly,
+      shallowReadonly
+    } = VueReactivity
+
+    let state = shallowReactive({
+      name: 'hefeng6500',
+      age: 27,
+    })
+
+    console.log(state);
+
+    
   </script>
 </body>
 
