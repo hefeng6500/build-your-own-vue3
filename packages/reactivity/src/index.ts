@@ -1,3 +1,2 @@
-export default function effect() {
-  console.log(123);
-}
+export { effect } from "./effect";
+export { reactive, shallowReactive, readonly, shallowReadonly } from "./reactive"
