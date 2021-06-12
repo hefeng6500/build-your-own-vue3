@@ -43,10 +43,10 @@ const outputConfigs = {
     format: "iife",
   },
 };
-// const defaultFormats = ["esm-bundler", "cjs"];
-// const inlineFormats = process.env.FORMATS && process.env.FORMATS.split(",");
+const defaultFormats = ["esm-bundler", "cjs"];
+const inlineFormats = process.env.FORMATS && process.env.FORMATS.split(",");
 
-const packageFormats = packageOptions.formats;
+const packageFormats = inlineFormats || packageOptions.formats || defaultFormats
 
 const tsPlugin = ts({
   tsconfig: path.resolve(__dirname, "tsconfig.json"),
@@ -63,6 +63,8 @@ function createConfig(format, output, plugins = []) {
   let entryFile = /runtime$/.test(format) ? `src/runtime.ts` : `src/index.ts`;
 
   const isGlobalBuild = /global/.test(format)
+  
+  output.exports = 'auto';
   
   if (isGlobalBuild) {
     output.name = packageOptions.name
