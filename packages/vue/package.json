@@ -1,0 +1,17 @@
+{
+  "name": "vue",
+  "version": "0.1.0",
+  "main": "index.js",
+  "buildOptions": {
+    "name": "Vue",
+    "formats": [
+      "esm-bundler",
+      "esm-bundler-runtime",
+      "cjs",
+      "global",
+      "global-runtime",
+      "esm-browser",
+      "esm-browser-runtime"
+    ]
+  }
+}
