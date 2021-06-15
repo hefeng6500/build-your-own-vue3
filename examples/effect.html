@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Effect</title>
+</head>
+
+<body>
+  <script src="../packages/reactivity/dist/reactivity.global.js"></script>
+  <script>
+    const {
+      effect,
+      reactive
+    } = VueReactivity
+
+    const state = reactive({
+      name: 'jack'
+    })
+
+    effect(() => {
+      let name = state.name;
+      console.log(name);
+    })
+
+    setTimeout(() => {
+      state.name = "hefeng6500"
+    }, 2000);
+  </script>
+</body>
+
+</html>
