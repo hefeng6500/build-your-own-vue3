@@ -32,7 +32,7 @@ export function createReactiveObject(target, isReadonly, baseHandlers) {
 
   const proxyMap = isReadonly ? readonlyMap : reactiveMap;
   const existProxy = proxyMap.get(target);
-debugger
+  
   if (existProxy) {
     return existProxy;
   }
