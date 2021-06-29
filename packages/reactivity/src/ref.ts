@@ -1,4 +1,4 @@
-import { hasChanged, isObject } from "@vue/shared";
+import { hasChanged, isArray, isObject } from "@vue/shared";
 import { track, trigger } from "./effect";
 import { TrackOpTypes, TriggerOpTypes } from "./operations";
 import { reactive } from "./reactive";
@@ -9,6 +9,18 @@ export function ref(value) {
 
 export function shallowRef(value) {
   return createRef(value, true);
+}
+
+export function toRef(target, key) {
+  return new ObjectRefImpl(target, key);
+}
+
+export function toRefs(object) {
+  const ret = isArray(object) ? new Array(object.length) : {};
+  for (let key in object) {
+    ret[key] = toRef(object, key);
+  }
+  return ret;
 }
 
 function createRef(rawValue, shallow = false) {
@@ -43,5 +55,16 @@ class RefImpl {
       // 派发通知
       trigger(this, TriggerOpTypes.SET, "value", newValue);
     }
+  }
+}
+
+class ObjectRefImpl {
+  public __v_isRef = true;
+  constructor(public target, public key) {}
+  get value() {
+    return this.target[this.key];
+  }
+  set value(newValue) {
+    this.target[this.key] = newValue;
   }
 }
