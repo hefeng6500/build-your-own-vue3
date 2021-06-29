@@ -53,7 +53,7 @@ export function track(target, type, key) {
   }
 }
 
-export function trigger(target, type, key, newValue, oldValue?) {
+export function trigger(target, type, key, newValue?, oldValue?) {
   const depsMap = targetMap.get(target);
 
   if (!depsMap) return;

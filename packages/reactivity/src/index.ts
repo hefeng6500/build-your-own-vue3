@@ -6,3 +6,4 @@ export {
   readonly,
   shallowReadonly,
 } from "./reactive";
+export { computed } from "./computed";
