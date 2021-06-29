@@ -43,10 +43,15 @@ const outputConfigs = {
     format: "iife",
   },
 };
-const defaultFormats = ["esm-bundler", "cjs"];
-const inlineFormats = process.env.FORMATS && process.env.FORMATS.split(",");
+// const defaultFormats = ["esm-bundler", "cjs"];
+// const inlineFormats = process.env.FORMATS && process.env.FORMATS.split(",");
 
-const packageFormats = inlineFormats || packageOptions.formats || defaultFormats
+// const packageFormats = inlineFormats || packageOptions.formats || defaultFormats
+
+// packageOptions.formats 配置了多种打包格式
+const packageFormats = packageOptions.formats || defaultFormats
+
+console.log("packageFormats", packageFormats);
 
 const tsPlugin = ts({
   tsconfig: path.resolve(__dirname, "tsconfig.json"),
