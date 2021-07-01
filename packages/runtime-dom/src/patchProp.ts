@@ -6,17 +6,17 @@ import { patchStyle } from "./modules/style";
 export const patchProp = (el, key, prevValue, nextValue) => {
   switch (key) {
     case "class":
-      patchClass();
+      patchClass(el, nextValue);
       break;
     case "style":
-      patchStyle();
+      patchStyle(el, prevValue, nextValue);
       break;
     default:
       // 正在匹配不是事件 就是是属性
       if (/^on[^a-z]/.test(key)) {
-        patchEvent()
+        patchEvent(el, key, nextValue);
       } else {
-        patchAttr()
+        patchAttr(el, key, nextValue);
       }
   }
 };
