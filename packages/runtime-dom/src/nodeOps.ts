@@ -11,7 +11,7 @@ export const nodeOps = {
   },
   // 插入元素
   insert: (child, parent, anchor = null) => {
-    parent.insertBofore(child, anchor);
+    parent.insertBefore(child, anchor)
   },
   // 查询元素
   querySelector: (selector) => document.querySelector(selector),

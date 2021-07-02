@@ -5,9 +5,6 @@
   "buildOptions": {
     "name": "VueRuntimeDOM",
     "formats": [
-      "esm-bundler",
-      "esm-browser",
-      "cjs",
       "global"
     ]
   }
