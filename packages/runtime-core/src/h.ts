@@ -2,7 +2,7 @@ import { isArray, isObject } from "@vue/shared/src";
 import { createVNode, isVnode } from "./vnode";
 
 export function h(type, propsOrChildren, children) {
-  let vnode
+  let vnode;
   const l = arguments.length; // 儿子节点要么是字符串 要么是数组 针对的是createVnode
   if (l == 2) {
     // 类型 + 属性 、  类型 + 孩子
@@ -22,7 +22,7 @@ export function h(type, propsOrChildren, children) {
     } else if (l === 3 && isVnode(children)) {
       children = [children];
     }
-     vnode = createVNode(type, propsOrChildren, children);
+    vnode = createVNode(type, propsOrChildren, children);
   }
-    return vnode
+  return vnode;
 }

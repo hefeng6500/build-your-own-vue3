@@ -27,13 +27,18 @@
           state.name = "Dan"
         }
         return () => {
+          // return h('div', {
+          //   style: {
+          //     color: 'red'
+          //   }
+          // }, h('span', 'hello'), h('span', 'world'))
           return h('div', {
             onClick: fn
           }, state.name);
         }
       },
     }
-    
+
     let app = createApp(App, {
       name: 'zf',
       age: 12

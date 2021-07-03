@@ -13,7 +13,7 @@ export const createVNode = (type, props, children = null) => {
     : 0;
 
   const vnode = {
-    __v_isNode: true,
+    __v_isVnode: true,
     type,
     props,
     children,

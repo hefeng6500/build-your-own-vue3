@@ -22,7 +22,6 @@ export function createRenderer(rendererOptions) {
 
     instance.update = effect(
       function componentEffect() {
-        debugger
         // 每个组件都有一个effect， vue3 是组件级更新，数据变化会重新执行对应组件的effect
         if (!instance.isMounted) {
           // 初次渲染

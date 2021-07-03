@@ -3,7 +3,6 @@ import { effect, track, trigger } from "./effect";
 import { TrackOpTypes, TriggerOpTypes } from "./operations";
 
 export function computed(getterOrOptions) {
-  debugger
   let getter;
   let setter;
 
