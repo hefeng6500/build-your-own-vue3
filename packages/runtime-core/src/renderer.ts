@@ -4,6 +4,7 @@ import { createAppApi } from "./apiCreateApp";
 import { createComponentInstance, setupComponent } from "./component";
 import { queueJob } from "./scheduler";
 import { normalizeVNode, Text } from "./vnode";
+import { invokeArrayFns } from "./apiLifecycle";
 
 export function createRenderer(rendererOptions) {
   const {
@@ -25,6 +26,12 @@ export function createRenderer(rendererOptions) {
       function componentEffect() {
         // 每个组件都有一个effect， vue3 是组件级更新，数据变化会重新执行对应组件的effect
         if (!instance.isMounted) {
+          let { bm, m } = instance;
+
+          if (bm) {
+            invokeArrayFns(bm);
+          }
+
           // 初次渲染
           let proxyToUse = instance.proxy;
           // $vnode  _vnode
@@ -37,14 +44,27 @@ export function createRenderer(rendererOptions) {
           // 用render函数的返回值 继续渲染
           patch(null, subTree, container);
           instance.isMounted = true;
+
+          if (m) {
+            // mounted 要求必须在我们子组件完成后才会调用自己
+            invokeArrayFns(m);
+          }
         } else {
           console.log("update");
+          let { bu, u } = instance;
+
+          if (bu) {
+            invokeArrayFns(bu);
+          }
 
           const prevTree = instance.subTree;
           let proxyToUse = instance.proxy;
           const nextTree = instance.render.call(proxyToUse, proxyToUse);
 
           patch(prevTree, nextTree, container);
+          if (u) {
+            invokeArrayFns(u);
+          }
         }
       },
       {

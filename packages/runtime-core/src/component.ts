@@ -32,14 +32,26 @@ export function setupComponent(instance) {
   }
 }
 
+export let currentInstance = null;
+export let setCurrentInstance = (instance) => {
+  currentInstance = instance;
+};
+export let getCurrentInstance = () => {
+  // 在setuop中获取当前实例
+  return currentInstance;
+};
+
 function setupStatefulComponent(instance) {
   instance.proxy = new Proxy(instance.ctx, PublicInstanceProxyHandlers as any);
 
   let Component = instance.type;
   let { setup } = Component;
   if (setup) {
+    currentInstance = instance;
     let setupContext = createSetupContext(instance);
     const setupResult = setup(instance.props, setupContext);
+    
+    currentInstance = null;
 
     handleSetupResult(instance, setupResult);
   } else {
