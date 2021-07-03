@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script src="../node_modules/@vue/runtime-dom/dist/runtime-dom.global.js"></script>
+    <div id="app"></div>
+    <script>
+        let { createApp, h, reactive, ref } = VueRuntimeDOM;
+
+
+        let App = {
+            setup(props, context) {
+                let state = reactive({ flag: true });
+                setTimeout(() => {
+                    state.flag = false;
+                }, 1000);
+
+                return () => {
+                    return state.flag ?
+                        h('div', { style: { color: 'red' } }, [
+                            h('li', { key: 'a' }, 'a'),
+                            h('li', { key: 'b' }, 'b'),
+                            h('li', { key: 'c' ,style:{color:'yellow'}}, 'c'),
+                            h('li', { key: 'd' }, 'd'),
+                            h('li', { key: 'e' }, 'e'),
+                            h('li', { key: 'q' }, 'q'),
+                            h('li', { key: 'f' }, 'f'),
+                            h('li', { key: 'g' }, 'g'),
+                        ]) :
+                        h('div', { style: { color: 'blue' } }, [
+                        h('li', { key: 'a' }, 'a'),
+                            h('li', { key: 'b' }, 'b'),
+                            h('li', { key: 'e' }, 'e'),
+                            h('li', { key: 'c', style:{color:'green'} }, 'c'),
+                            h('li', { key: 'd' }, 'd'),
+                            h('li', { key: 'h' }, 'h'),
+                            h('li', { key: 'f' }, 'f'),
+                            h('li', { key: 'g' }, 'g'),
+                        ])
+                }
+            },
+        }
+        let app = createApp(App, { name: 'zf', age: 12 });
+        app.mount('#app');
+
+        // 将组件 变成vnode -> 在将vnode 变成真实的dom -> 插入到页面上
+        // render方法的作用可以渲染一个虚拟节点 将他挂载具体的dom元素上
+        // vue3 的执行的核心就在patch这个方法上
+
+        // 组件创造的过程中 
+        // 创造一个instance ->  初始化
+        // 根据用户传入的组件  拿到对应的内容 来填充这个instance对象
+        // 创建effect 并且调用render方法，数据会将对应的effect收集起来
+        // 拿到render方法返回的结果 再次走渲染流程 -> patch
+
+        // 组件渲染的顺序 是先父后子, 执行顺序是深度优先
+
+        // 每个组件都是一个effect函数
+    </script>
+</body>
+
+</html>
