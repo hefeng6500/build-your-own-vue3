@@ -16,17 +16,15 @@
       reactive
     } = VueReactivity
 
-    const state = reactive({
-      name: 'jack'
-    })
+    const state = reactive([0,1,2])
 
     effect(() => {
-      let name = state.name;
+      let name = state[0];
       console.log(name);
     })
 
     setTimeout(() => {
-      state.name = "hefeng6500"
+      state[0] = "hefeng6500"
     }, 2000);
   </script>
 </body>
