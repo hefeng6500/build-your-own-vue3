@@ -1,12 +1,33 @@
 //
 
-import { isObject, extend, isArray, isIntegerKey, hasOwn, hasChanged } from "@vue/shared";
+import {
+  isObject,
+  extend,
+  isArray,
+  isIntegerKey,
+  hasOwn,
+  hasChanged,
+} from "@vue/shared";
 import { track, trigger } from "./effect";
 import { TrackOpTypes, TriggerOpTypes } from "./operations";
 import { reactive, readonly } from "./reactive";
 
 function createGetter(isReadonly = false, shallow = false) {
   return function get(target, key, receiver) {
+    /**
+      receiver 是什么？
+      MDN: Proxy或者继承Proxy的对象
+      ES6: 它总是指向原始的读操作所在的那个对象，一般情况下就是 Proxy 实例。
+
+      const proxy = new Proxy({}, {
+        get: function(target, key, receiver) {
+          return receiver;
+        }
+      });
+      proxy.getReceiver === proxy // true
+
+     */
+
     const res = Reflect.get(target, key, receiver);
     if (!isReadonly) {
       // 进行依赖收集
@@ -27,6 +48,8 @@ function createGetter(isReadonly = false, shallow = false) {
 function createSetters(shallow = false) {
   return function set(target, key, value, receiver) {
     const oldValue = target[key];
+
+    // 判断 target 是否存在 key 属性，target 可能是数组或者对象
     const hadKey =
       isArray(target) && isIntegerKey(key)
         ? Number(key) < target.length
