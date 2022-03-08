@@ -1,37 +1,35 @@
 import { isArray, isIntegerKey } from "@vue/shared";
+import { createDep } from "./dep";
 import { TriggerOpTypes } from "./operations";
 
-let effectStack = [];
-let uid = 0;
 let activeEffect;
 
-export function effect(fn, options = {}) {
-  // 创建响应式的 effect，当数据变化时重新执行
-  const effect = createReactiveEffect(fn, options);
-  effect();
-  return effect;
+export class ReactiveEffect<T = any> {
+  deps: any = [];
+
+  constructor(public fn: () => T) {}
+
+  run() {
+    activeEffect = this as any;
+    const result = this.fn();
+    activeEffect = undefined;
+
+    return result;
+  }
+
+  stop() {}
 }
 
-export function createReactiveEffect(fn, options) {
-  const effect = function reactiveEffect() {
-    if (!effectStack.includes(effect)) {
-      try {
-        effectStack.push(effect);
-        activeEffect = effect;
-        return fn();
-      } finally {
-        effectStack.pop();
-        activeEffect = effectStack[effectStack.length - 1];
-      }
-    }
-  };
+export function effect(fn, options = {}) {
+  const _effect = new ReactiveEffect(fn);
 
-  effect.id = uid++;
-  effect._isEffect = true;
-  effect.raw = fn;
-  effect.options = options;
+  _effect.run();
 
-  return effect;
+  const runner = _effect.run as any;
+
+  runner.effect = _effect;
+
+  return runner;
 }
 
 let targetMap = new Map();
@@ -48,41 +46,57 @@ export function track(target, type, key) {
   if (!dep) {
     depsMap.set(key, (dep = new Set()));
   }
+
+  trackEffects(dep);
+}
+
+export function trackEffects(dep) {
   if (!dep.has(activeEffect)) {
     dep.add(activeEffect);
+    (activeEffect as any).deps.push(dep);
   }
 }
 
 export function trigger(target, type, key, newValue?, oldValue?) {
+  let deps: any = [];
+
   const depsMap = targetMap.get(target);
 
   if (!depsMap) return;
-
-  let effects = new Set();
-  const add = function (effectsToAdd) {
-    effectsToAdd.forEach((effect) => {
-      effects.add(effect);
-    });
-  };
-
-  if (isArray(target)) {
+  
+  if (key === "length" && isArray(target)) {
     depsMap.forEach((dep, key) => {
-      if (key === "length" || newValue < key) {
-        add(dep);
+      if (key === "length" || key >= newValue) {
+        deps.push(dep);
       }
     });
     switch (type) {
       case TriggerOpTypes.ADD:
         if (isArray(target) && isIntegerKey(key)) {
-          add(depsMap.get("length"));
+          deps.push(depsMap.get("length"));
         }
     }
   } else {
     if (key !== undefined) {
-      add(depsMap.get(key));
+      deps.push(depsMap.get(key));
     }
   }
-  effects.forEach((effect: any) => {
-    effect()
-  });
+
+  const effects: Array<any> = [];
+
+  // dep 是 Set 数据类型，里面包含 activeEffect
+  for (const dep of deps) {
+    if (dep) {
+      effects.push(...dep);
+    }
+  }
+
+  // 为啥这里要 new Set() ? 去重?
+  triggerEffects(createDep(effects));
+}
+
+export function triggerEffects(dep) {
+  for (const effect of dep) {
+    effect.run();
+  }
 }
