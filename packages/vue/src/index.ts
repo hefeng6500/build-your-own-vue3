@@ -1,6 +1,1 @@
-
-function Vue() {
-  return "Hello Vue-Next!"
-}
-
-export default Vue
+export * from "@vue/runtime-dom";

@@ -7,3 +7,5 @@ export {
 } from "./apiLifecycle";
 export { h } from "./h";
 export { getCurrentInstance } from "./component";
+
+export * from "@vue/reactivity";
