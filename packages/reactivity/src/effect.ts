@@ -6,15 +6,26 @@ let activeEffect;
 
 export class ReactiveEffect<T = any> {
   deps: any = [];
+  parent: any;
 
   constructor(public fn: () => T) {}
 
   run() {
-    activeEffect = this as any;
-    const result = this.fn();
-    activeEffect = undefined;
+    let parent = activeEffect;
 
-    return result;
+    while (parent) {
+      parent = parent.parent;
+    }
+
+    try {
+      this.parent = activeEffect;
+      activeEffect = this as any;
+
+      return this.fn();
+    } finally {
+      activeEffect = this.parent;
+      this.parent = undefined;
+    }
   }
 
   stop() {}
@@ -63,7 +74,7 @@ export function trigger(target, type, key, newValue?, oldValue?) {
   const depsMap = targetMap.get(target);
 
   if (!depsMap) return;
-  
+
   if (key === "length" && isArray(target)) {
     depsMap.forEach((dep, key) => {
       if (key === "length" || key >= newValue) {
