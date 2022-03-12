@@ -1,7 +1,6 @@
 import path from "path";
 import ts from "rollup-plugin-typescript2";
 import json from "@rollup/plugin-json";
-import { getBabelOutputPlugin } from "@rollup/plugin-babel";
 
 const masterVersion = require("./package.json").version;
 const packagesDir = path.resolve(__dirname, "packages");
@@ -83,10 +82,6 @@ function createConfig(format, output, plugins = []) {
         namedExports: false,
       }),
       tsPlugin,
-      getBabelOutputPlugin({
-        allowAllFormats: true,
-        presets: ["@babel/preset-env"],
-      }),
     ],
   };
 }
