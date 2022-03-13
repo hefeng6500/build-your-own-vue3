@@ -27,6 +27,7 @@ async function buildAll(targets) {
 async function runParallel(maxConcurrency, source, iteratorFn) {
   const ret = [];
   const executing = [];
+  // 循环打包每一个 package
   for (const item of source) {
     const p = Promise.resolve().then(() => iteratorFn(item, source));
     ret.push(p);
