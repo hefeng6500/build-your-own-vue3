@@ -6,7 +6,7 @@ let activeEffect;
 
 export class ReactiveEffect<T = any> {
   deps: any = [];
-  parent: any;
+  parent: any = undefined;
 
   constructor(public fn: () => T) {}
 
@@ -36,7 +36,7 @@ export function effect(fn, options = {}) {
 
   _effect.run();
 
-  const runner = _effect.run as any;
+  const runner = _effect.run.bind(_effect) as any;
 
   runner.effect = _effect;
 
